@@ -19,9 +19,13 @@ export function ProductGrid({ products, isLoading }: ProductGridProps) {
     );
   }
 
+  const validProducts = products.filter(
+    (p) => (p.price_sources?.length || 0) > 0,
+  );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-      {products.map((product) => (
+      {validProducts.map((product) => (
         <ProductCard key={product._id} product={product} />
       ))}
     </div>

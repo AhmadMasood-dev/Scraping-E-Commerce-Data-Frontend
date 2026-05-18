@@ -1,6 +1,12 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { ProductImage } from "./ProductImage";
+import { PriceTag } from "./PriceTag";
+import { StoreBadge } from "./StoreBadge";
+// AUTH-DISABLED: import { WishlistButton } from "./WishlistButton";
+import { storeColor } from "@/lib/storeConfig";
 
 interface ProductStoreConfig {
   current_price: number | string;
@@ -12,48 +18,60 @@ export interface ProductType {
   title: string;
   image_url?: string;
   price_sources?: ProductStoreConfig[];
+  rating?: number;
 }
 
 interface ProductCardProps {
   product: ProductType;
+  /** Show wishlist heart on hover (default true). Disable for compact contexts. */
+  showWishlist?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const storeData =
-    product.price_sources && product.price_sources.length > 0
-      ? product.price_sources[0]
-      : null;
-  const price = storeData ? storeData.current_price : "N/A";
-  const storeName = storeData ? storeData.store_name : "";
-  const initialImage =
-    product.image_url || "https://via.placeholder.com/400?text=NO+IMAGE";
+/**
+ * Unified product card used everywhere except the search-page cross-store
+ * comparison (PrimaryProductCard) — landing carousels, catalog grid, category
+ * pages, related products, DB matches in search results.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function ProductCard({ product, showWishlist = true }: ProductCardProps) {
+  const storeData = product.price_sources && product.price_sources.length > 0
+    ? product.price_sources[0]
+    : null;
+  const price = typeof storeData?.current_price === "number" ? storeData.current_price : null;
+  const storeName = storeData?.store_name;
+  const color = storeColor(storeName);
 
   return (
     <Link href={`/products/${product._id}`} className="block group h-full">
-      <Card className="h-full border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300 rounded-xl overflow-hidden group cursor-pointer relative top-0 hover:-top-1">
-        <div className="h-60 bg-white p-6 flex items-center justify-center relative border-b border-border/50 group-hover:bg-slate-50/50 transition-colors">
-          <img
-            src={initialImage}
+      <Card
+        className={`relative h-full bg-card text-card-foreground rounded-2xl overflow-hidden border border-border shadow-soft hover:shadow-soft-hover hover:-translate-y-0.5 transition-all duration-300 ${color.border} border-l-4 cursor-pointer`}
+      >
+        {/* AUTH-DISABLED: wishlist heart hidden until auth is re-enabled.
+            {showWishlist && (
+              <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                <WishlistButton productId={product._id} variant="floating" size="sm" />
+              </div>
+            )}
+        */}
+
+        <div className="h-56 bg-white p-6 flex items-center justify-center relative border-b border-border/60">
+          <ProductImage
+            src={product.image_url}
             alt={product.title}
+            storeName={storeName}
             className="max-h-full max-w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
           />
-          {storeName && (
-            <Badge
-              variant="secondary"
-              className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm text-[10px] font-semibold block w-fit"
-            >
-              {storeName}
-            </Badge>
-          )}
         </div>
+
         <CardContent className="p-5 space-y-3">
-          <h3 className="font-medium text-foreground tracking-tight line-clamp-2 min-h-[3rem] text-sm leading-relaxed group-hover:text-primary transition-colors">
+          {storeName && <StoreBadge storeName={storeName} />}
+
+          <h3 className="font-semibold text-foreground tracking-tight line-clamp-2 min-h-[2.75rem] text-base leading-snug group-hover:text-primary transition-colors">
             {product.title}
           </h3>
-          <div className="flex items-center justify-between pt-1">
-            <span className="text-lg font-bold text-foreground">
-              {price !== "N/A" ? `Rs. ${price.toLocaleString()}` : price}
-            </span>
+
+          <div className="flex items-end justify-between pt-1">
+            <PriceTag amount={price} size="md" />
           </div>
         </CardContent>
       </Card>

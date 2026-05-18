@@ -1,4 +1,5 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
+import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -42,14 +43,31 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends ButtonPrimitive.Props,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  /**
+   * When true, the button styles are forwarded to the immediate child via Radix Slot.
+   * Use this to style links/anchors as buttons without nesting interactive elements.
+   * Example: `<Button asChild><Link href="/x">Go</Link></Button>`
+   */
+  asChild?: boolean
+}
 
 function Button({
   className,
   variant = "default",
   size = "default",
+  asChild = false,
   ...props
 }: ButtonProps) {
+  if (asChild) {
+    return (
+      <Slot
+        data-slot="button"
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...(props as React.ComponentProps<typeof Slot>)}
+      />
+    )
+  }
   return (
     <ButtonPrimitive
       data-slot="button"
