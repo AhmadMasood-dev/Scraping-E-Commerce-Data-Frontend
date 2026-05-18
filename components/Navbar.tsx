@@ -39,7 +39,7 @@ const NAV_LINKS: NavLink[] = [
   { href: "/categories/Mobile", label: "Mobiles",    match: (p) => p.startsWith("/categories/Mobile") },
   { href: "/categories/Laptop", label: "Laptops",    match: (p) => p.startsWith("/categories/Laptop") },
   { href: "/zameen",            label: "Real Estate", match: (p) => p.startsWith("/zameen") },
-  // { href: "/pakwheels",         label: "Vehicles",   match: (p) => p.startsWith("/pakwheels") },
+  { href: "/pakwheels",         label: "Vehicles",   match: (p) => p.startsWith("/pakwheels") },
 ];
 
 export default function Navbar() {

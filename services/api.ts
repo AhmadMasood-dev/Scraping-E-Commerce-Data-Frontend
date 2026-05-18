@@ -181,6 +181,16 @@ export async function fetchPakWheelsMakes(): Promise<string[]> {
   return data.data;
 }
 
+export async function fetchPakWheelsBodyTypes(): Promise<string[]> {
+  const { data } = await api.get("/pakwheels/body-types");
+  return data.data;
+}
+
+export async function fetchPakWheelsCities(): Promise<string[]> {
+  const { data } = await api.get("/pakwheels/cities");
+  return data.data;
+}
+
 export interface PakWheelsSearchParams {
   q?: string;
   make?: string;
@@ -189,6 +199,9 @@ export interface PakWheelsSearchParams {
   fuel_type?: string;
   transmission?: string;
   condition?: "New" | "Used";
+  body_type?: string;
+  province?: string;
+  assembly?: string;
   min_year?: number;
   max_year?: number;
   min_price?: number;

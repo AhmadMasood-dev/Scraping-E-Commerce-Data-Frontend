@@ -69,6 +69,7 @@ export interface PakWheelsVehicle {
   transmission?: string;
   color?: string;
   city?: string;
+  province?: string;
   price?: number;
   condition?: 'New' | 'Used';
   description?: string;
@@ -76,6 +77,13 @@ export interface PakWheelsVehicle {
   seller_type?: 'Individual' | 'Dealer';
   posted_at?: string;
   source_url?: string;
+  // ─── Extended from Kaggle dataset ──────────────────────────────────────────
+  body_type?: string;
+  engine_capacity?: number;
+  registered_in?: string;
+  assembly?: string;
+  features?: string[];
+  source_ref?: string;
 }
 
 export interface ScraperMeta {

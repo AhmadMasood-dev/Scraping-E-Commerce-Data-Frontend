@@ -14,6 +14,8 @@ import {
   ZameenSearchParams,
   fetchPakWheelsCategories,
   fetchPakWheelsMakes,
+  fetchPakWheelsBodyTypes,
+  fetchPakWheelsCities,
   fetchPakWheelsSearch,
   fetchPakWheelsById,
   PakWheelsSearchParams,
@@ -132,6 +134,14 @@ export function usePakWheelsCategories() {
 
 export function usePakWheelsMakes() {
   return useQuery({ queryKey: ["pakwheels", "makes"], queryFn: fetchPakWheelsMakes });
+}
+
+export function usePakWheelsBodyTypes() {
+  return useQuery({ queryKey: ["pakwheels", "body-types"], queryFn: fetchPakWheelsBodyTypes });
+}
+
+export function usePakWheelsCities() {
+  return useQuery({ queryKey: ["pakwheels", "cities"], queryFn: fetchPakWheelsCities });
 }
 
 export function usePakWheelsSearch(params: PakWheelsSearchParams) {

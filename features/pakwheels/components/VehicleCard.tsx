@@ -13,7 +13,12 @@ export function VehicleCard({ v }: { v: PakWheelsVehicle }) {
     <Link href={`/pakwheels/${v._id}`} className="block group">
       <article className="flex flex-col bg-card border border-border rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover hover:-translate-y-0.5 transition-all duration-300 border-l-4 border-l-orange-500">
         <div className="px-4 py-2.5 flex items-center justify-between border-b border-border/60">
-          <p className="text-eyebrow text-orange-700">{v.make}</p>
+          <p className="text-eyebrow text-orange-700">
+            {v.make}
+            {v.body_type && (
+              <span className="text-muted-foreground font-normal normal-case tracking-normal"> · {v.body_type}</span>
+            )}
+          </p>
           {v.condition && (
             <Badge
               variant="secondary"

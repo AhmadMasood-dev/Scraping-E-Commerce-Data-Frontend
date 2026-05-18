@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useQueryStates, parseAsString, parseAsInteger } from "nuqs";
-import { usePakWheelsSearch, usePakWheelsMakes } from "@/services/hooks";
+import { usePakWheelsSearch, usePakWheelsMakes, usePakWheelsBodyTypes, usePakWheelsCities } from "@/services/hooks";
 import { VehicleCard } from "@/features/pakwheels/components/VehicleCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +40,8 @@ function PakWheelsSearchContent() {
     fuel_type:    parseAsString.withDefault(""),
     transmission: parseAsString.withDefault(""),
     condition:    parseAsString.withDefault(""),
+    body_type:    parseAsString.withDefault(""),
+    assembly:     parseAsString.withDefault(""),
     min_year:     parseAsInteger,
     max_year:     parseAsInteger,
     min_price:    parseAsInteger,
@@ -50,6 +52,10 @@ function PakWheelsSearchContent() {
 
   const { data: makesData } = usePakWheelsMakes();
   const makes = makesData ?? [];
+  const { data: bodyTypesData } = usePakWheelsBodyTypes();
+  const bodyTypes = bodyTypesData ?? [];
+  const { data: citiesData } = usePakWheelsCities();
+  const cities = citiesData ?? [];
 
   const params = {
     q: filters.q || undefined,
@@ -59,6 +65,8 @@ function PakWheelsSearchContent() {
     fuel_type: filters.fuel_type || undefined,
     transmission: filters.transmission || undefined,
     condition: (filters.condition || undefined) as "New" | "Used" | undefined,
+    body_type: filters.body_type || undefined,
+    assembly: filters.assembly || undefined,
     min_year: filters.min_year ?? undefined,
     max_year: filters.max_year ?? undefined,
     min_price: filters.min_price ?? undefined,
@@ -75,6 +83,7 @@ function PakWheelsSearchContent() {
   const reset = () =>
     setFilters({
       q: "", make: "", model: "", city: "", fuel_type: "", transmission: "", condition: "",
+      body_type: "", assembly: "",
       min_year: null, max_year: null, min_price: null, max_price: null, sort: "newest", page: 1,
     });
 
@@ -133,6 +142,17 @@ function PakWheelsSearchContent() {
               </select>
             </div>
             <div>
+              <FieldLabel>Body type</FieldLabel>
+              <select
+                className={selectCls}
+                value={filters.body_type}
+                onChange={(e) => setFilters({ body_type: e.target.value, page: 1 })}
+              >
+                <option value="">All body types</option>
+                {bodyTypes.map((b) => <option key={b} value={b}>{b}</option>)}
+              </select>
+            </div>
+            <div>
               <FieldLabel>Model</FieldLabel>
               <input
                 className={inputCls}
@@ -143,12 +163,14 @@ function PakWheelsSearchContent() {
             </div>
             <div>
               <FieldLabel>City</FieldLabel>
-              <input
-                className={inputCls}
-                placeholder="Lahore, Karachi…"
+              <select
+                className={selectCls}
                 value={filters.city}
                 onChange={(e) => setFilters({ city: e.target.value, page: 1 })}
-              />
+              >
+                <option value="">All cities</option>
+                {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -174,16 +196,30 @@ function PakWheelsSearchContent() {
                 </select>
               </div>
             </div>
-            <div>
-              <FieldLabel>Condition</FieldLabel>
-              <select
-                className={selectCls}
-                value={filters.condition}
-                onChange={(e) => setFilters({ condition: e.target.value, page: 1 })}
-              >
-                <option value="">Any</option>
-                {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <FieldLabel>Condition</FieldLabel>
+                <select
+                  className={selectCls}
+                  value={filters.condition}
+                  onChange={(e) => setFilters({ condition: e.target.value, page: 1 })}
+                >
+                  <option value="">Any</option>
+                  {CONDITIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div>
+                <FieldLabel>Assembly</FieldLabel>
+                <select
+                  className={selectCls}
+                  value={filters.assembly}
+                  onChange={(e) => setFilters({ assembly: e.target.value, page: 1 })}
+                >
+                  <option value="">Any</option>
+                  <option value="Local">Local</option>
+                  <option value="Imported">Imported</option>
+                </select>
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
